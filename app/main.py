@@ -8,5 +8,5 @@ def get_application() -> FastAPI:
     application.include_router(router, prefix=API_PREFIX)
     return application
 
-
+#uvicorn app.main:app
 app = get_application()

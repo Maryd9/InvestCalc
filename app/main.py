@@ -8,5 +8,8 @@ def get_application() -> FastAPI:
     application.include_router(router, prefix=API_PREFIX)
     return application
 
-#uvicorn app.main:app
+
+# Активация виртуального окружения venv/Scripts/activate
+# Деактивация deactivate
+# Запуск приложения uvicorn app.main:app
 app = get_application()

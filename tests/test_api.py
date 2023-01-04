@@ -10,6 +10,7 @@ from scripts.create_db import main as create_db
 
 class APITestCase(TestCase):
 
+    # python tests
     def setUp(self):
         if not IS_TEST:
             raise Exception('Please setup `IS_TEST=True` os variable')

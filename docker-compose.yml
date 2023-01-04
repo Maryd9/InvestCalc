@@ -6,7 +6,7 @@ services:
     container_name: investcalc-app
     network_mode: host
     ports:
-      - "8000:8000"
+      - "8000:000"
     command: bash -c "uvicorn app.main:app"
     env_file:
       - .env

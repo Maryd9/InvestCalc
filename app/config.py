@@ -27,3 +27,5 @@ SECRET_KEY = config('SECRET_KEY', cast=Secret)
 
 PROJECT_NAME = config('PROJECT_NAME', default='FastApi application example')
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=CommaSeparatedStrings, default='')
+
+

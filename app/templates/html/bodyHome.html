@@ -1,0 +1,104 @@
+<div th:fragment="bodyHome">
+    <div class="container">
+        <main>
+            <div class="py-5 text-center">
+                <h2>Инвестиционный калькулятор</h2>
+                <p class="lead">Below is an example form built entirely with Bootstrap’s form controls. Each required form
+                    group has a validation state that can be triggered by attempting to submit the form without completing
+                    it.</p>
+            </div>
+
+            <select class="form-select" id="indexes" required>
+                <option value="SelectIndex">Выберите показатель...</option>
+                <option value="SCS" selected="selected">Стартовый капитал (расчет с использованием просто процента)
+                </option>
+                <option value="SCD">Стартовый капитал (расчет с использованием сложного процента)</option>
+                <option value="FAS">Конечную сумму (расчет с использованием просто процента)</option>
+                <option value="FAD">Конечную сумму (расчет с использованием сложного процента)</option>
+                <option value="NPV">Конечную сумму за вычетом старотового капитала NPV</option>
+                <option value="PI">Рентабельность PI</option>
+                <option value="DPP">Срок достижения цели DPP</option>
+                <option value="IRR">Доходность IRR</option>
+                <option value="MIRR">Модифицированная доходность MIRR</option>
+            </select>
+            <br>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <label for="N" id="IDN" class="form-label">Число временных периодов</label>
+                    <input type="number" class="form-control" id="N" required="">
+                    <div class="invalid-feedback">
+                        Введите число
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label for="R(%)" id="IDR(%)" class="form-label">Ставка дисконтирования в %</label>
+                    <input type="number" class="form-control" id="R(%)" required="">
+                    <div class="invalid-feedback">
+                        Введите число
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label for="CF" id="IDCF" class="form-label">Денежные потоки</label>
+                    <input type="number" class="form-control" id="CF" required="">
+                    <div class="invalid-feedback">
+                        Введите число
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+            var select = document.querySelector('select');
+            document.getElementById('IDR(%)').hidden = true;
+            document.getElementById('R(%)').hidden = true;
+            document.getElementById('IDN').hidden = true;
+            document.getElementById('N').hidden = true;
+            document.getElementById('IDCF').hidden = true;
+            document.getElementById('CF').hidden = true;
+
+            select.addEventListener('change', function(){
+                console.log(this.value);
+                if (this.value == "SelectIndex"){
+                    document.getElementById('R(%)').hidden = false;
+                }
+                else if (this.value == "SCS"){
+                    document.getElementById('R(%)').hidden = false;
+                }
+                else if (this.value == "SCD"){
+                    document.getElementById('R(%)').hidden = false;
+                }
+                else if (this.value == "FAS"){
+                    document.getElementById('R(%)').hidden = false;
+                }
+                else if (this.value == "FAD"){
+                    document.getElementById('R(%)').hidden = false;
+                }
+                else if (this.value == "NPV"){
+                    document.getElementById('IDR(%)').hidden = false;
+                    document.getElementById('R(%)').hidden = false;
+                    document.getElementById('IDN').hidden = false;
+                    document.getElementById('N').hidden = false;
+                    document.getElementById('IDCF').hidden = false;
+                    document.getElementById('CF').hidden = false;
+                }
+                else if (this.value == "PI"){
+                    document.getElementById('R(%)').hidden = false;
+                }
+                else if (this.value == "DPP"){
+                    document.getElementById('R(%)').hidden = false;
+                }
+                else if (this.value == "IRR"){
+                    document.getElementById('R(%)').hidden = false;
+                }
+                else if (this.value == "MIRR"){
+                    document.getElementById('R(%)').hidden = false;
+                }
+            });
+
+        </script>
+            <br>
+            <button class="w-100 btn btn-primary btn-lg" type="submit">Рассчитать</button>
+
+        </main>
+    </div>
+</div>

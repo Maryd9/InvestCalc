@@ -3,8 +3,6 @@ import os
 from starlette.config import Config
 from starlette.datastructures import CommaSeparatedStrings, Secret
 
-API_PREFIX = '/api'
-
 VERSION = '0.0.1'
 # URL моей бд
 dir_path = os.path.dirname(os.path.realpath(__file__))

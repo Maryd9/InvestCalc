@@ -44,16 +44,3 @@ class AuthToken(Base):
     token = Column(String)
     user_id = Column(Integer, ForeignKey('user.id'))
     created_at = Column(String, default=datetime.utcnow())
-
-
-class Stream(Base):
-    __tablename__ = 'stream'
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    title = Column(String)
-    topic = Column(String)
-    status = Column(String, default=StreamStatus.PLANED.value)
-    created_at = Column(String, default=datetime.utcnow())
-
-    def __str__(self):
-        return f'{self.id} - {self.title}[{self.topic}]'

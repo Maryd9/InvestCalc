@@ -1,17 +1,13 @@
 from fastapi import FastAPI
-from starlette.staticfiles import StaticFiles
-
-
-from app.config import API_PREFIX, DEBUG, PROJECT_NAME, VERSION
+from app.config import DEBUG, PROJECT_NAME, VERSION
 from app.handlers import router
 import uvicorn
-
 from app.settings import settings
 
 
 def get_application() -> FastAPI:
     application = FastAPI(title=PROJECT_NAME, debug=DEBUG, version=VERSION)
-    application.include_router(router, prefix=API_PREFIX)
+    application.include_router(router)
     return application
 
 
@@ -24,7 +20,7 @@ app = get_application()
 # database = databases.Database(DATABASE_URL)
 
 if __name__ == "__main__":
-    uvicorn.run('app.main:app', host=settings.server_host, port=settings.server_port, reload=True)
+    uvicorn.run(app, host=settings.server_host, port=settings.server_port, reload=True)
 # @app.on_event("startup")
 # async def startup():
 #     # когда приложение запускается устанавливаем соединение с БД

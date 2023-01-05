@@ -7,7 +7,7 @@ from app.database.base import get_db
 from app.models import connect_db, Stream, User, AuthToken, StreamStatus
 from app.forms import UserLoginForm, UserCreateForm, StreamForm, StreamUpdateForm
 from app.auth import check_auth_token
-from starlette.responses import RedirectResponse
+from starlette.responses import RedirectResponse, HTMLResponse
 from starlette.status import HTTP_303_SEE_OTHER, HTTP_302_FOUND
 from app.utils import get_password_hash
 
@@ -15,11 +15,13 @@ router = APIRouter()
 templates = Jinja2Templates(directory='app/templates')
 
 
-@router.get('/')
-def home(request: Request, db_session: Session = Depends(get_db)):
-    return templates.TemplateResponse('html/home.html',
-                                      {'request': request})
+# @router.get('/', response_class=HTMLResponse)
+# async def read_item(request: Request):
+#     return templates.TemplateResponse("home.html", {"request": request})
 
+@router.get("/")
+async def root():
+    return {"message": "Hello World"}
 # @router.post('/login', name='user:login')
 # def login(user_form: UserLoginForm = Body(..., embed=True), database=Depends(connect_db)):
 #     user = database.query(User).filter(User.email == user_form.email).one_or_none()

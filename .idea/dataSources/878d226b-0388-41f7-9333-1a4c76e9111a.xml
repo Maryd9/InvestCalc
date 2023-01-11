@@ -1317,106 +1317,75 @@
     <table id="483" parent="166" name="sqlite_master">
       <System>1</System>
     </table>
-    <table id="484" parent="166" name="stream"/>
-    <table id="485" parent="166" name="user"/>
-    <column id="486" parent="482" name="id">
+    <table id="484" parent="166" name="user"/>
+    <column id="485" parent="482" name="id">
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="487" parent="482" name="token">
+    <column id="486" parent="482" name="token">
       <DataType>varchar(256)|0s</DataType>
       <Position>2</Position>
     </column>
-    <column id="488" parent="482" name="user_id">
+    <column id="487" parent="482" name="user_id">
       <DataType>INTEGER|0s</DataType>
       <Position>3</Position>
     </column>
-    <column id="489" parent="482" name="created_at">
+    <column id="488" parent="482" name="created_at">
       <DataType>varchar(64)|0s</DataType>
       <Position>4</Position>
     </column>
-    <foreign-key id="490" parent="482">
+    <foreign-key id="489" parent="482">
       <ColNames>user_id</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>user</RefTableName>
     </foreign-key>
-    <key id="491" parent="482">
+    <key id="490" parent="482">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="492" parent="483" name="type">
+    <column id="491" parent="483" name="type">
       <DataType>TEXT|0s</DataType>
       <Position>1</Position>
     </column>
-    <column id="493" parent="483" name="name">
+    <column id="492" parent="483" name="name">
       <DataType>TEXT|0s</DataType>
       <Position>2</Position>
     </column>
-    <column id="494" parent="483" name="tbl_name">
+    <column id="493" parent="483" name="tbl_name">
       <DataType>TEXT|0s</DataType>
       <Position>3</Position>
     </column>
-    <column id="495" parent="483" name="rootpage">
+    <column id="494" parent="483" name="rootpage">
       <DataType>INT|0s</DataType>
       <Position>4</Position>
     </column>
-    <column id="496" parent="483" name="sql">
+    <column id="495" parent="483" name="sql">
       <DataType>TEXT|0s</DataType>
       <Position>5</Position>
     </column>
-    <column id="497" parent="484" name="id">
+    <column id="496" parent="484" name="id">
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="498" parent="484" name="user_id">
-      <DataType>INTEGER|0s</DataType>
+    <column id="497" parent="484" name="email">
+      <DataType>varchar(256)|0s</DataType>
       <Position>2</Position>
     </column>
-    <column id="499" parent="484" name="title">
-      <DataType>VARCHAR|0s</DataType>
+    <column id="498" parent="484" name="password">
+      <DataType>varchar(256)|0s</DataType>
       <Position>3</Position>
     </column>
-    <column id="500" parent="484" name="topic">
-      <DataType>VARCHAR|0s</DataType>
+    <column id="499" parent="484" name="username">
+      <DataType>varchar(256)|0s</DataType>
       <Position>4</Position>
     </column>
-    <column id="501" parent="484" name="status">
-      <DataType>VARCHAR(64)|0s</DataType>
+    <column id="500" parent="484" name="created_at">
+      <DataType>varchar(64)|0s</DataType>
       <Position>5</Position>
     </column>
-    <column id="502" parent="484" name="created_at">
-      <DataType>VARCHAR(64)|0s</DataType>
-      <Position>6</Position>
-    </column>
-    <foreign-key id="503" parent="484">
-      <ColNames>user_id</ColNames>
-      <RefColNames>id</RefColNames>
-      <RefTableName>user</RefTableName>
-    </foreign-key>
-    <key id="504" parent="484">
-      <ColNames>id</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <column id="505" parent="485" name="id">
-      <DataType>INTEGER|0s</DataType>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-    </column>
-    <column id="506" parent="485" name="email">
-      <DataType>varchar(256)|0s</DataType>
-      <Position>2</Position>
-    </column>
-    <column id="507" parent="485" name="password">
-      <DataType>varchar(256)|0s</DataType>
-      <Position>3</Position>
-    </column>
-    <column id="508" parent="485" name="login">
-      <DataType>varchar(256)|0s</DataType>
-      <Position>4</Position>
-    </column>
-    <key id="509" parent="485">
+    <key id="501" parent="484">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>

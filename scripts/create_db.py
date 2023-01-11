@@ -1,17 +1,21 @@
+import uvicorn
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from app.config import DATABASE_URL
+from app import settings
+from app.config import SQLALCHAMY_DATABASE_URL
+from app.main import app
 
 
 def main():
-    engine = create_engine(DATABASE_URL)
+    engine = create_engine(SQLALCHAMY_DATABASE_URL)
     session = Session(bind=engine.connect())
 
     session.execute("""create table user (
         id integer not null primary key,
         email varchar(256),
         password varchar(256),
-        login varchar(256)
+        username varchar(256),
+        created_at varchar(64)
     );""")
 
     session.execute("""create table auth_token (
@@ -21,17 +25,9 @@ def main():
             created_at varchar(64)
         );""")
 
-    session.execute("""create table stream (
-            id integer not null primary key,
-            user_id integer references user,
-            title VARCHAR,
-            topic VARCHAR,
-            status VARCHAR(64),
-            created_at VARCHAR(64)
-        );""")
 
     session.close()
 
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    uvicorn.run(app, host=settings.settings.server_host, port=settings.settings.server_port, reload=True)

@@ -105,7 +105,6 @@
         }
     </style>
     <!--<link rel="stylesheet" href="styleLogin.css"> -->
-
 </head>
 <body>
 <!-- partial:index.partial.html -->
@@ -221,25 +220,38 @@
 <body>
 <div class="main">
     <input type="checkbox" id="chk" aria-hidden="true">
-
     <div class="signup">
-        <form id="signupform">
+        <form id="formSignUpUser" action="/signup" method="post">
             <label for="chk" aria-hidden="true">Регистрация</label>
-            <input type="text" name="txt" placeholder="Введите ваше имя" required="">
-            <input type="email" name="email" placeholder="Введите email" required="">
-            <input type="password" name="password" placeholder="Введите пароль" required="">
-            <input type="hidden" name="_csrf" value="$_csrf.token">
-            <button formenctype = "application/x-www-form-urlencoded" formmethod = "post">Зарегистрироваться</button>
+            <input type="text" id="usernameReg" placeholder="Введите ваше имя" value="{{ usernameReg }}" required="">
+            <input type="email" id="emailReg" placeholder="Введите email" value="{{ emailReg }}" required="">
+            <input type="password" id="passwordReg" placeholder="Введите пароль" value="{{ passwordReg }}" required="">
+            <button class="ui teal basic button" type="submit">Зарегистрироваться</button>
+
+            <script src="C:/Users/masha/PycharmProjects/InvestCalc/app/templates/js/reg.js" type="text/javascript"></script>
         </form>
     </div>
 
     <div class="login">
-        <form>
+        <form id="formAuthUser" action="/login" method="post">
             <label for="chk" aria-hidden="true">Вход</label>
-            <input type="email" name="email" placeholder="Email" required="">
-            <input type="password" name="pswd" placeholder="Пароль" required="">
-            <button formenctype = "application/x-www-form-urlencoded" formmethod = "post">Войти</button>
-            <button onclick="location.href='example.com'" type="button">Забыли пароль?</button>
+            <input type="email" id="username" name="username" placeholder="Email" required="">
+            <input type="password" id="password" name="password" placeholder="Пароль" required="">
+            <button class="ui teal basic button" type="submit">Войти</button>
+            <script>
+                formAuthUser.onsubmit = async (e) => {
+                    e.preventDefault();
+
+                    let response = await fetch('/login', {
+                        method: 'POST',
+                        headers: {},
+                        body: new FormData(formAuthUser)
+                    });
+
+                    let result = await response.json();
+
+                };
+            </script>
         </form>
     </div>
 </div>

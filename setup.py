@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='app-example',
     version='0.0.1',
-    description='FastApi app',
+    description='InvestCalc app',
     install_requires=[
         'fastapi==0.88.0',
         #Виртуальный сервер

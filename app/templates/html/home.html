@@ -3,11 +3,10 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <title>Инвестиционный калькулятор</title>
+    <link rel="shortcut icon" href="data:;base64,iVBORw0KGgo=">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
 </head>
-
 <body class="bg-light">
-
 <div class="container d-flex flex-wrap">
     <ul class="nav me-auto">
         <li class="nav-item"><a href="/app/static" class="nav-link link-dark px-2 active" aria-current="page"></a></li>
@@ -15,7 +14,6 @@
     <ul class="nav">
         <li class="nav-item"><a class="nav-link link-dark px-2" href="/login">Войти</a></li>
     </ul>
-
 </div>
 <div class="container">
     <main>
@@ -23,33 +21,34 @@
             <h2>Инвестиционный калькулятор</h2>
             <p class="lead">Твой помощник в инвестициях</p>
         </div>
-        <div class="row" style="vertical-align: middle">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-6">
-                <label for="indexes" class="form-label">Рассчитать:</label>
-                <select class="form-select col-sm-8" id="indexes" required>
-                    <option value="SelectIndex">Выберите показатель...</option>
-                    <option value="SCS">Стартовый капитал (расчет с использованием просто процента)
-                    </option>
-                    <option value="SCD">Стартовый капитал (расчет с использованием сложного процента)</option>
-                    <option value="FAS">Конечную сумму (расчет с использованием просто процента)</option>
-                    <option value="FAD">Конечную сумму (расчет с использованием сложного процента)</option>
-                    <option value="NPV">Конечную сумму за вычетом старотового капитала</option>
-                    <option value="PI">Рентабельность</option>
-                    <option value="DPP">Срок достижения цели</option>
-                    <option value="IRR">Доходность</option>
-                    <option value="MIRR">Модифицированная доходность</option>
-                </select>
-            </div>
-            <div class="col-sm-3"></div>
-        </div>
-        <br>
-        <form id="Form1">
+        <form id="Form1" method="post">
             <div class="row" style="vertical-align: middle">
                 <div class="col-sm-3"></div>
                 <div class="col-sm-6">
-                    <label for="I" id="IDI" class="form-label">Первоначальные вложения</label>
-                    <input type="number" class="form-control" id="I" required="">
+                    <label for="indexes" class="form-label">Рассчитать:</label>
+                    <select class="form-select" id="indexes" name="indexes" value="{{ indexes }}" required="">
+                        <option value="SelectIndex">Выберите показатель...</option>
+                        <option value="SCS">Стартовый капитал (расчет с использованием просто процента)
+                        </option>
+                        <option value="SCD">Стартовый капитал (расчет с использованием сложного процента)</option>
+                        <option value="FAS">Конечную сумму (расчет с использованием просто процента)</option>
+                        <option value="FAD">Конечную сумму (расчет с использованием сложного процента)</option>
+                        <option value="NPV">Чистый дисконтированный доход (NPV)</option>
+                        <option value="PI">Индекс прибыльности (PI)</option>
+                        <option value="DPP">Срок достижения цели</option>
+                        <option value="IRR">Доходность</option>
+                        <option value="MIRR">Модифицированная доходность</option>
+                    </select>
+                </div>
+                <div class="col-sm-3"></div>
+            </div>
+            <br>
+            <div class="row" style="vertical-align: middle">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <label for="initialInvestment" id="IDI" class="form-label">Первоначальные вложения</label>
+                    <input type="number" class="form-control" id="initialInvestment" name="initialInvestment"
+                           value="{{ initialInvestment }}" required="">
                     <div class="invalid-feedback">
                         Введите число
                     </div>
@@ -60,8 +59,8 @@
             <div class="row" style="vertical-align: middle">
                 <div class="col-sm-3"></div>
                 <div class="col-sm-3">
-                    <label for="N" id="IDN" class="form-label">Число временных периодов</label>
-                    <select class="form-select" id="N" required>
+                    <label for="cashflows" id="IDN" class="form-label">Число временных периодов</label>
+                    <select class="form-select" id="cashflows" name="cashflows" value="{{ cashflows }}" required="">
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -83,13 +82,12 @@
                         <option value="19">19</option>
                         <option value="20">20</option>
                     </select>
-                    <div class="invalid-feedback">
-                        Введите число
-                    </div>
                 </div>
                 <div class="col-sm-3">
-                    <label for="R(%)" id="IDR(%)" class="form-label">Ставка дисконтирования в %</label>
-                    <input type="number" class="form-control" id="R(%)" required="">
+                    <label for="discountRate" id="IDR(%)" class="form-label">Ставка дисконтирования в %</label>
+                    <input type="number" class="form-control" id="discountRate" name="discountRate"
+                           value="{{ discountRate }}"
+                           required="">
                     <div class="invalid-feedback">
                         Введите число
                     </div>
@@ -99,12 +97,112 @@
             <br>
             <div class="row" style="vertical-align: middle">
                 <div class="col-sm-3"></div>
-                <div class="col-sm-4">
+                <div class="col-sm-4" id="tableCf">
                     <table class="table table-borderless" id="table">
                         <thead>
-                        <tr>
+                        <tr id="year0">
                             <th scope="col">Год</th>
-                            <th scope="col">Денежные потоки</th>
+                            <th scope="col" class="text-center">Денежные потоки</th>
+                        </tr>
+                        <tr id="year1">
+                            <th scope="col">1</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf1" name="cf1"
+                                                   value="{{ cf1 }}"></th>
+                        </tr>
+                        <tr id="year2">
+                            <th scope="col">2</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf2" name="cf2"
+                                                   value="{{ cf2 }}"></th>
+                        </tr>
+                        <tr id="year3">
+                            <th scope="col">3</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf3" name="cf3"
+                                                   value="{{ cf3 }}"></th>
+                        </tr>
+                        <tr id="year4">
+                            <th scope="col">4</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf4" name="cf4"
+                                                   value="{{ cf4 }}"></th>
+                        </tr>
+                        <tr id="year5">
+                            <th scope="col">5</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf5" name="cf5"
+                                                   value="{{ cf5 }}"></th>
+                        </tr>
+                        <tr id="year6">
+                            <th scope="col">6</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf6" name="cf6"
+                                                   value="{{ cf6 }}"></th>
+                        </tr>
+                        <tr id="year7">
+                            <th scope="col">7</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf7" name="cf7"
+                                                   value="{{ cf7 }}"></th>
+                        </tr>
+                        <tr id="year8">
+                            <th scope="col">8</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf8" name="cf8"
+                                                   value="{{ cf8 }}"></th>
+                        </tr>
+                        <tr id="year9">
+                            <th scope="col">9</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf9" name="cf9"
+                                                   value="{{ cf9 }}"></th>
+                        </tr>
+                        <tr id="year10">
+                            <th scope="col">10</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf10" name="cf10"
+                                                   value="{{ cf10 }}"></th>
+                        </tr>
+                        <tr id="year11">
+                            <th scope="col">11</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf11" name="cf11"
+                                                   value="{{ cf11 }}"></th>
+                        </tr>
+                        <tr id="year12">
+                            <th scope="col">12</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf12" name="cf12"
+                                                   value="{{ cf12 }}"></th>
+                        </tr>
+                        <tr id="year13">
+                            <th scope="col">13</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf13" name="cf13"
+                                                   value="{{ cf13 }}"></th>
+                        </tr>
+                        <tr id="year14">
+                            <th scope="col">14</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf14" name="cf14"
+                                                   value="{{ cf14 }}"></th>
+                        </tr>
+                        <tr id="year15">
+                            <th scope="col">15</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf15" name="cf15"
+                                                   value="{{ cf15 }}"></th>
+                        </tr>
+                        <tr id="year16">
+                            <th scope="col">16</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf16" name="cf16"
+                                                   value="{{ cf16 }}"></th>
+                        </tr>
+                        <tr id="year17">
+                            <th scope="col">17</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf17" name="cf17"
+                                                   value="{{ cf17 }}"></th>
+                        </tr>
+                        <tr id="year18">
+                            <th scope="col">18</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf18" name="cf18"
+                                                   value="{{ cf18 }}"></th>
+                        </tr>
+                        <tr id="year19">
+                            <th scope="col">19</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf19" name="cf19"
+                                                   value="{{ cf19 }}"></th>
+                        </tr>
+                        <tr id="year20">
+                            <th scope="col">20</th>
+                            <th scope="col"><input type="number" class="form-control" id="cf20" name="cf20"
+                                                   value="{{ cf20 }}"></th>
                         </tr>
                         </thead>
                         <tbody id="row1"></tbody>
@@ -112,91 +210,77 @@
                 </div>
                 <div class="col-sm-3"></div>
             </div>
-            <script type="text/javascript">
-                document.getElementById('table').hidden = true;
-                var select = document.querySelector('#N');
-                select.addEventListener('change', function () {
-                    document.getElementById('table').hidden = false;
-                    delete_field("row1");
-                    for (let i = 0; i < this.value; i++) {
-                        add_field_year(i);
-                    }
-                });
-
-                function add_field_year(i) {
-                    var x = document.getElementById("row1");
-                    var new_field = document.createElement("tr");
-                    new_field.setAttribute("id", String(i));
-                    console.log(i);
-                    var pos = x.childElementCount;
-                    x.insertBefore(new_field, x.childNodes[pos]);
-                    add_num(i)
-                    add_field_cf(i);
-                }
-
-                function add_num(i) {
-                    var x = document.getElementById(i);
-                    var new_field = document.createElement("th");
-                    new_field.setAttribute("scope", "col");
-                    new_field.innerHTML = i + 1;
-                    var pos = x.childElementCount;
-                    x.insertBefore(new_field, x.childNodes[pos]);
-                }
-
-                function add_field_cf(param) {
-                    var x = document.getElementById(param);
-                    var new_field = document.createElement("input");
-                    new_field.setAttribute("type", "number");
-                    new_field.setAttribute("name", "cf");
-                    new_field.setAttribute("class", "form-control mb-3");
-                    new_field.setAttribute("required", "");
-                    var pos = x.childElementCount;
-                    x.insertBefore(new_field, x.childNodes[pos]);
-                }
-
-                function delete_field(param) {
-                    const list = document.getElementById(param);
-                    list.replaceChildren();
-                }
-            </script>
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <button class="btn btn-primary" id="btn" type="submit">Рассчитать</button>
+            </div>
         </form>
 
         <script type="text/javascript">
-            var select = document.querySelector(".form-select");
-            document.getElementById('Form1').hidden = true;
+            function cleanFields(param) {
+                indexes.addEventListener('change', function () {
+                    console.log(this.value);
+                    if (this.value === "NPV" , this.value === "PI", this.value === "DPP" , this.value === "IRR" , this.value === "MIRR") {
+                        param--;
+                        while (param > -1) {
+                            document.getElementById('year' + param).value = '';
+                            param--;
+                        }
+                        document.getElementById('initialInvestment').value = '';
+                        document.getElementById('cashflows').value = '';
+                        document.getElementById('discountRate').value = '';
+                    }
+                });
+            }
 
-            select.addEventListener('change', function () {
-                console.log(this.value);
-                if (this.value === "SelectIndex") {
-                    document.getElementById('R(%)').hidden = false;
-                } else if (this.value === "SCS") {
-                    document.getElementById('R(%)').hidden = false;
-                } else if (this.value === "SCD") {
-                    document.getElementById('R(%)').hidden = false;
-                } else if (this.value === "FAS") {
-                    document.getElementById('R(%)').hidden = false;
-                } else if (this.value === "FAD") {
-                    document.getElementById('R(%)').hidden = false;
-                } else if (this.value === "NPV" || this.value === "PI" || this.value === "DPP" || this.value === "IRR" || this.value === "MIRR") {
-                    document.getElementById('Form1').reset();
-                    document.getElementById('Form1').hidden = false;
+            function cleanFieldsCf() {
+                for (let i = 2; i < 21; i++) {
+                    document.getElementById('year' + i).hidden = true;
                 }
-            });
+            }
+
+            function addFieldsCf() {
+                cashflows.addEventListener('change', function () {
+                    cleanFieldsCf();
+                    for (let i = 0; i <= this.value; i++) {
+                        document.getElementById('year' + i).hidden = false;
+                    }
+                });
+            }
+
+            cleanFieldsCf();
+            var years = document.getElementById('cashflows').value;
+            cleanFields(years);
+            addFieldsCf();
+
+
+            function setNewEntry(entry) {
+                //#block - найти элемент по индентификатору
+                //.block - найти по имени класса
+                document.getElementById('#res').html(getNewEntry(document.getElementById('#res').html(), entry));
+            }
+
+            function getNewEntry(oldHTML, newHTML) {
+                if (newHTML === '')
+                    return newHTML;
+                else
+                    return oldHTML + newHTML;
+            }
 
         </script>
+
         <br>
         <div class="d-grid gap-2 col-6 mx-auto">
-            <button class="btn btn-primary" type="submit">Рассчитать</button>
-            <hr class="my-4">
             <div class="row">
-                <div class="col-sm-3">
-                    <p class="text-end fs-6 fw-bold"><span class="align-middle">Результат:</span></p>
-                </div>
-                <div class="col-sm-6">
-                    <input class="form-control form-control-lg" type="text" readonly>
+                <div class="col-sm-12" id="sel">
+                    <label>Результат:</label>
+                    <p id="res" class="form-control form-control-lg" type="text" readonly><span
+                            class="align-middle">{{ result }}</span></p>
                 </div>
             </div>
         </div>
+        <script type="text/javascript">
+            document.getElementById('res').value = ''
+        </script>
     </main>
 </div>
 </body>

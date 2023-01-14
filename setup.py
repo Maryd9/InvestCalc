@@ -15,5 +15,5 @@ setup(
         'requests==2.28.1',
     ]
     ,
-    scripts=['app/main.py', 'scripts/create_db.py']
+    scripts=['main.py', 'scripts/create_db.py']
 )

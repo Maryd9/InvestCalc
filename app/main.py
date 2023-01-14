@@ -1,3 +1,4 @@
+from deta import Deta
 from fastapi import FastAPI
 from app.config import DEBUG, PROJECT_NAME, VERSION
 from app.handlers import router
@@ -19,3 +20,5 @@ def get_application() -> FastAPI:
 app = get_application()
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
+deta = Deta("project key")

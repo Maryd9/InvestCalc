@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="{{ url_for('static', path='images/favicon.ico') }}">
     <title>Вход</title>
     <style>
         body {
@@ -10,7 +11,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            font-family: carlito;
+            font-family: carlito, serif;
             background: #f8f9fa;
         }
 
@@ -21,7 +22,7 @@
             overflow: hidden;
             background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;
             border-radius: 10px;
-            box-shadow: 5px 20px 50px #000;
+            box-shadow: 5px 10px 30px #b6bdc6;
         }
 
         #chk {
@@ -131,7 +132,7 @@
             overflow: hidden;
             background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;
             border-radius: 10px;
-            box-shadow: 5px 20px 50px #000;
+            /*box-shadow: 5px 20px 50px #000;*/
         }
 
         #chk {
@@ -228,7 +229,43 @@
             <input type="password" id="passwordReg" placeholder="Введите пароль" value="{{ passwordReg }}" required="">
             <button class="ui teal basic button" type="submit">Зарегистрироваться</button>
 
-            <script src="C:/Users/masha/PycharmProjects/InvestCalc/app/templates/js/reg.js" type="text/javascript"></script>
+            <script>
+
+                formSignUpUser.onsubmit = async (e) => {
+
+                    e.preventDefault();
+
+                    var usernameVal = document.getElementById('usernameReg').value;
+                    var emailVal = document.getElementById('emailReg').value;
+                    var passwordVal = document.getElementById('passwordReg').value;
+
+                    const data = {username: usernameVal, email: emailVal, password: passwordVal};
+
+                    let response = await fetch('/signup', {
+                        method: 'POST', // or 'PUT'
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    let result = await response.json();
+
+                    if (result.ok) {
+                        var token = result;
+                        let response = await fetch('/homeAuth', {
+                            method: 'GET', // or 'PUT'
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(token)
+                        });
+                    } else {
+                        alert("Неверный email или пароль");
+                    }
+
+                };
+            </script>
         </form>
     </div>
 
@@ -238,17 +275,24 @@
             <input type="email" id="username" name="username" placeholder="Email" required="">
             <input type="password" id="password" name="password" placeholder="Пароль" required="">
             <button class="ui teal basic button" type="submit">Войти</button>
+            <button onclick="location.href='http://www.example.com'" type="button">Забыли пароль?</button>
             <script>
                 formAuthUser.onsubmit = async (e) => {
                     e.preventDefault();
 
-                    let response = await fetch('/login', {
+                    let response = await fetch('/signin', {
                         method: 'POST',
                         headers: {},
                         body: new FormData(formAuthUser)
                     });
 
                     let result = await response.json();
+
+                    if (result.ok) {
+                        let result = await response.json();
+                    } else {
+                        alert("Неверный email или пароль");
+                    }
 
                 };
             </script>

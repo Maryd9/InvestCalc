@@ -2,8 +2,11 @@ FROM python:3.9.7-slim
 
 ENV PYTHONBUFFERED 1
 
-EXPOSE 8000
 WORKDIR /app
+COPY requirements.txt /app
+RUN pip install -e .
 
 COPY . /app
-RUN pip install -e .
+EXPOSE 5000
+
+CMD["python", "main.py"]

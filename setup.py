@@ -9,7 +9,7 @@ setup(
         #Виртуальный сервер
         'uvicorn==0.20.0',
         #ORM, для общения с бд
-        'SQLAlchemy==1.4.45',
+        'SQLAlchemy==1.4.46',
         'pytest==7.2.0',
         #Для http запросов
         'requests==2.28.1',

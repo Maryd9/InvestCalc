@@ -1,4 +1,3 @@
-
 formSignUpUser.onsubmit = async (e) => {
 
     e.preventDefault();
@@ -17,10 +16,16 @@ formSignUpUser.onsubmit = async (e) => {
         body: JSON.stringify(data)
     });
 
-    if (result.ok) {
-        let result = await response.json();
-    } else {
-        alert("Ошибка HTTP: " + response.status);
-    }
+    let result = await response.json();
 
+    if (result.ok) {
+        console.log(result);
+        alert("Регистрация прошла успешно");
+        const data = {id: id, token: emailVal, password: passwordVal};
+
+    } else {
+        console.log(result);
+
+        alert("Неверный email или пароль");
+    }
 };

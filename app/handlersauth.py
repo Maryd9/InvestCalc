@@ -1,11 +1,12 @@
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
-from fastapi import Depends, HTTPException, status, APIRouter
+from fastapi import Depends, HTTPException, status, APIRouter, Request
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, HTMLResponse
 from . import forms, config, models, hashing, token
 from sqlalchemy.orm import Session
 from app.config import get_db
+from .handlers import templates
 from .models import User
 
 router = APIRouter(tags=['Authentication'])
@@ -88,4 +89,4 @@ def create_user(user: forms.UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
 
-    return JSONResponse(content={"message": "User registered", "user_id": new_user.id}, status_code=200)
+    return JSONResponse(content={"message": "OK", "user_id": new_user.id}, status_code=200)

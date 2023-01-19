@@ -1,6 +1,10 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Depends, Form
 from starlette.templating import Jinja2Templates
-from starlette.responses import HTMLResponse
+from starlette.responses import HTMLResponse, RedirectResponse
+from sqlalchemy.orm import Session
+
+from app import models, forms
+from app.config import get_db
 
 router = APIRouter(tags=['Get form'])
 templates = Jinja2Templates(directory='app/templates')
@@ -16,9 +20,16 @@ def home(request: Request):
     return templates.TemplateResponse('signin.html', {'request': request})
 
 
+@router.post("/home/user", response_class=RedirectResponse, name='Main page after login')
+def users(userid: str = Form(...), db: Session = Depends(get_db)):
+    user = db.query(models.Users).filter(models.Users.id == userid).first()
+    return RedirectResponse(f"/home/user/{userid}", status_code=200)
+
+
 @router.get("/home/user/{id}", response_class=HTMLResponse, name='Main page after login')
-def users(request: Request):
-    return templates.TemplateResponse('homeUser.html', {'request': request})
+def users(request: Request, userid: str = Form(...), db: Session = Depends(get_db)):
+    user = db.query(models.Users).filter(models.Users.id == userid).first()
+    return templates.TemplateResponse('homeUser.html', {'request': request, 'user': user})
 
 
 @router.get('/savedresults/user/{id}', response_class=HTMLResponse, name='All saved result of user')

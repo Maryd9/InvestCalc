@@ -1,9 +1,8 @@
 from fastapi import FastAPI
-from app.config import config
+from app.config import config, engine, Base
 from app.handlers import router
 from app import handlersauth, handlerscalc
 from fastapi.staticfiles import StaticFiles
-
 
 API_PREFIX = '/api'
 
@@ -23,5 +22,8 @@ def get_application() -> FastAPI:
 
 
 app = get_application()
+
+# создаем таблицы для бд
+Base.metadata.create_all(bind=engine)
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")

@@ -10,7 +10,7 @@ def main():
     engine = create_engine(SQLALCHAMY_DATABASE_URL)
     session = Session(bind=engine.connect())
 
-    session.execute("""create table user (
+    session.execute("""create table users (
         id integer not null primary key,
         email varchar(256),
         password varchar(256),
@@ -21,7 +21,7 @@ def main():
     session.execute("""create table auth_token (
             id integer not null primary key,
             token varchar(256),
-            user_id integer references user,
+            user_id integer references users,
             created_at varchar(64)
         );""")
 

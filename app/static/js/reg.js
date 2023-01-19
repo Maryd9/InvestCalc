@@ -18,14 +18,22 @@ formSignUpUser.onsubmit = async (e) => {
 
     let result = await response.json();
 
-    if (result.ok) {
-        console.log(result);
+    if (result.message === "OK") {
         alert("Регистрация прошла успешно");
-        const data = {id: id, token: emailVal, password: passwordVal};
+
+        fetch('/home/user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                'userid': result.user_id
+            })
+        });
+
 
     } else {
         console.log(result);
-
-        alert("Неверный email или пароль");
+        alert("Пользователь с таким еmail уже зарегистрирован");
     }
 };

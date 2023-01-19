@@ -7,7 +7,6 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
-
 class UserCreate(BaseModel):
     username: str
     email: EmailStr
@@ -29,4 +28,5 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
+    id: int
     email: Optional[str] = None

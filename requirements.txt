@@ -1,5 +1,4 @@
 anyio==3.6.2
--e git+https://github.com/Maryd9/InvestCalc.git@5c7776b195984adab10031a2c78361680cf27da4#egg=app_example
 attrs==22.2.0
 bcrypt==4.0.1
 certifi==2022.12.7

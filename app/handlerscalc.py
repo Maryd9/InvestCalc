@@ -10,4 +10,4 @@ router = APIRouter(tags=['Calculation'])
 async def home(request: Request, indexes: str = Form(...), initialInvestment: int = Form(...),
                discountRate: int = Form(...), cashflows: int = Form(...), cf1: int = Form(...)):
     result = calculation(indexes, initialInvestment, discountRate, cashflows, cf1)
-    return templates.TemplateResponse('home.html', {'request': request, 'result': result})
+    return templates.TemplateResponse('index.html', {'request': request, 'result': result})

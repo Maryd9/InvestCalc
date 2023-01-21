@@ -2,8 +2,6 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from app.config import Base
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import TIMESTAMP
-from sqlalchemy.sql.expression import text
-from datetime import datetime
 
 
 # создаем модель, объекты которой будут храниться в бд

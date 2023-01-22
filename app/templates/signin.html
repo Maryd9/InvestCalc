@@ -17,24 +17,23 @@
 <div class="main">
     <input type="checkbox" id="chk" aria-hidden="true">
     <div class="signup">
-        <form id="formSignUpUser" action="/signup" method="post">
+        <form id="formSignUpUser" hx-post="/signup" hx-target="#signup" action="/signup" method="post">
             <label for="chk" aria-hidden="true">Регистрация</label>
-            <input type="text" id="usernameReg" placeholder="Введите ваше имя" value="{{ usernameReg }}" required="">
-            <input type="email" id="emailReg" placeholder="Введите email" value="{{ emailReg }}" required="">
-            <input type="password" id="passwordReg" placeholder="Введите пароль" value="{{ passwordReg }}" required="">
+            <input type="text" id="username" name="username" placeholder="Введите ваше имя" class="validate" required="">
+            <input type="email" id="email" name="email" placeholder="Введите email" class="validate" required="">
+            <input type="password" id="password" name="password" placeholder="Введите пароль" class="validate" required="">
             <button class="ui teal basic button" type="submit">Зарегистрироваться</button>
-            <script type="text/javascript" src="../static/js/reg.js"></script>
         </form>
     </div>
 
     <div class="login">
-        <form id="formAuthUser" action="/signin" method="post">
+        <form id="formAuthUser" hx-post="/signup" hx-target="#signup" action="/signin" method="post">
             <label for="chk" aria-hidden="true">Вход</label>
             <input type="email" id="username" name="username" placeholder="Email" required="">
             <input type="password" id="password" name="password" placeholder="Пароль" required="">
             <button class="ui teal basic button" type="submit">Войти</button>
             <button onclick="location.href='http://www.example.com'" type="button">Забыли пароль?</button>
-            <script type="text/javascript" src="../static/js/reg.js"></script>
+
         </form>
     </div>
 </div>

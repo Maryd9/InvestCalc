@@ -1,13 +1,12 @@
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
-from fastapi import Depends, HTTPException, status, APIRouter, Request
+from fastapi import Depends, HTTPException, status, APIRouter, Request, Form
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from starlette.responses import JSONResponse, HTMLResponse
 from . import forms, config, models, hashing, token
 from sqlalchemy.orm import Session
 from app.config import get_db, SQLALCHAMY_DATABASE_URL
-from .forms import UserLogin
-from .handlers import templates, users, RequiresLoginException
+from .handlers import templates
 from .models import Users
 from databases import Database
 
@@ -47,20 +46,6 @@ def verify_access_token(token: str, credentials_exception):
     return token_data
 
 
-async def authenticate_user(self, username, password):
-    try:
-        user = UserLogin(email=username, password=password)
-        query = users.select().where(users.c.email == user.email)
-        result = await database.fetch_one(query)
-        if result:
-            password_check = self.verify_password(user.password, result[2])
-            return password_check
-        else:
-            return False
-    except:
-        raise RequiresLoginException()
-
-
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(config.get_db)):
     credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                           detail=f"Could not validate credentials",
@@ -78,15 +63,6 @@ async def login(request: Request, user_credentials: OAuth2PasswordRequestForm = 
     try:
         user = db.query(models.Users).filter(
             models.Users.email == user_credentials.username).first()
-        if await authenticate_user(user.email, user.password):
-            atoken = create_access_token(user.email)
-            response = templates.TemplateResponse("success.html",
-                                                  {"request": request, "USERNAME": user.email,
-                                                   "success_msg": "Welcome back! ",
-                                                   "path_route": '/private/', "path_msg": "Go to your private page!"})
-
-            response.set_cookie(key="Authorization", value=f"{atoken}", httponly=True)
-            return response
         if not user:
             return templates.TemplateResponse("error.html",
                                               {"request": request, 'detail': 'Incorrect Username or Password',
@@ -95,45 +71,37 @@ async def login(request: Request, user_credentials: OAuth2PasswordRequestForm = 
             return templates.TemplateResponse("error.html",
                                               {"request": request, 'detail': 'Incorrect Username or Password',
                                                'status_code': 403})
+        access_token = create_access_token(data={"user_id": user.id})
+        response = templates.TemplateResponse("success.html",
+                                              {"request": request, "USERNAME": user.username,
+                                               "success_msg": "Добро пожаловать обратно, ",
+                                               "path_route": '/savedResults/',
+                                               "path_msg": "Перейти к личному кабинету"})
+
+        response.set_cookie(key="Authorization", value=f"{access_token}", httponly=True)
+        return response
 
     except Exception as err:
         return templates.TemplateResponse("error.html",
                                           {"request": request, 'detail': 'Incorrect Username or Password',
                                            'status_code': 401})
 
-    # if not user:
-    #     return JSONResponse(content={"message": "Email already taken"}, status_code=403)
-    #     # raise HTTPException(
-    #     #     status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
-    #
-    # if not hashing.verify(user_credentials.password, user.password):
-    #     return JSONResponse(content={"message": "Email already taken"}, status_code=403)
-    #     # raise HTTPException(
-    #     #     status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
-    #
-    # access_token = create_access_token(data={"user_id": user.id})
-    #
-    # return {"access_token": access_token, "token_type": "bearer"}
 
-
-@router.post("/signup", response_class=HTMLResponse)
-async def create_user(request: Request, user: forms.UserCreate, db: Session = Depends(get_db)):
-    exists_user = db.query(Users.id).filter(Users.email == user.email).one_or_none()
+@router.post("/signup/", response_class=HTMLResponse)
+async def create_user(request: Request, email: str = Form(...), username: str = Form(...), password: str = Form(...),
+                      db: Session = Depends(get_db)):
+    exists_user = db.query(Users.id).filter(Users.email == email).one_or_none()
     if exists_user:
-        return JSONResponse(content={"message": "Email already taken"}, status_code=200)
-        # raise HTTPException(
-        #     status_code=status.HTTP_400_BAD_REQUEST,
-        #     detail='Email already taken',
-        # )
+        return JSONResponse(content={"message": "Email already taken"}, status_code=400)
     # hash the password - user.password
-    hashed_password = hashing.hash(user.password)
-    user.password = hashed_password
+    hashed_password = hashing.hash(password)
+    password = hashed_password
 
     new_user = Users(
         role_id=2,
-        username=user.username,
-        email=user.email,
-        password=user.password
+        username=username,
+        email=email,
+        password=password
     )
     db.add(new_user)
     db.commit()
@@ -141,9 +109,7 @@ async def create_user(request: Request, user: forms.UserCreate, db: Session = De
 
     access_token = create_access_token(data={"user_id": new_user.id})
 
-    # return JSONResponse(content={"message": "OK", "user_id": new_user.id, "access_token": access_token},
-    #                     status_code=200)
-    response = templates.TemplateResponse("success.html",
-                                          {"request": request, "success_msg": "Registration Successful!",
-                                           "path_route": '/', "path_msg": "Click here to login!"})
+    response = templates.TemplateResponse('success.html',
+                                          {'request': request, 'success_msg': 'Registration Successful!',
+                                           'path_route': '/', 'path_msg': 'Click here to login!'})
     return response

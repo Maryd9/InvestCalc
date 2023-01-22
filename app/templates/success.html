@@ -1,12 +1,15 @@
-<div  class="container">
-    <div class="row">
+<link rel="stylesheet" type="text/css" href="../static/css/styleLogin.css">
+<form id="formSuccess">
+    <div class="container">
+        <div class="row">
+            <div class="row col s6">
+                <h1>{{ success_msg }} {{ USERNAME }}</h1>
+            </div>
+        </div>
         <div class="row col s6">
-            <h1>{{ success_msg }} {{ USERNAME }}</h1>
+            <div class="h3">
+                <button onclick="location.href='/savedresults/user'" type="button">{{ path_msg }}</button>
+            </div>
         </div>
     </div>
-    <div class="row col s6">
-        <div class="h3">
-            <a href="{{ path_route }}"> {{ path_msg }}</a>
-        </div>
-    </div>
-</div>
+</form>

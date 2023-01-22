@@ -1,12 +1,10 @@
 from fastapi import APIRouter, Request, Depends, Form, Security
-from fastapi.security import HTTPAuthorizationCredentials,HTTPBearer
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from starlette.templating import Jinja2Templates
 from starlette.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
-from fastapi.responses import Response
 from app import models
 from app.config import get_db
-from main import app
 
 router = APIRouter(tags=['Get form'])
 templates = Jinja2Templates(directory='app/templates')
@@ -22,40 +20,6 @@ def auth_wrapper(self, auth: HTTPAuthorizationCredentials = Security(security)):
     return self.decode_token(auth.credentials)
 
 
-@app.exception_handler(RequiresLoginException)
-async def exception_handler(request: Request, exc: RequiresLoginException) -> Response:
-    return RedirectResponse(url='/')
-
-
-@app.middleware("http")
-async def create_auth_header(
-        request: Request,
-        call_next, ):
-    if ("Authorization" not in request.headers
-            and "Authorization" in request.cookies
-    ):
-        access_token = request.cookies["Authorization"]
-
-        request.headers.__dict__["_list"].append(
-            (
-                "authorization".encode(),
-                f"Bearer {access_token}".encode(),
-            )
-        )
-    elif ("Authorization" not in request.headers
-          and "Authorization" not in request.cookies
-    ):
-        request.headers.__dict__["_list"].append(
-            (
-                "authorization".encode(),
-                f"Bearer 12345".encode(),
-            )
-        )
-
-    response = await call_next(request)
-    return response
-
-
 @router.get('/', response_class=HTMLResponse, name='Main page')
 def home(request: Request):
     return templates.TemplateResponse('index.html', {'request': request})
@@ -66,32 +30,37 @@ def home(request: Request):
     return templates.TemplateResponse('signin.html', {'request': request})
 
 
-@router.post("/home/user", response_class=RedirectResponse, name='Main page after login')
-def users(userid: str = Form(...), db: Session = Depends(get_db)):
-    user = db.query(models.Users).filter(models.Users.id == userid).first()
-    return RedirectResponse(f"/home/user/{userid}", status_code=200)
+# @router.post("/user", response_class=RedirectResponse, name='Main page after login')
+# def users(userid: str = Form(...), db: Session = Depends(get_db)):
+#     user = db.query(models.Users).filter(models.Users.id == userid).first()
+#     return RedirectResponse(f"/home/user/{userid}", status_code=200)
 
 
-@router.get("/home/user/{id}", response_class=HTMLResponse, name='Main page after login')
-def users(request: Request, userid: str = Form(...), db: Session = Depends(get_db)):
-    user = db.query(models.Users).filter(models.Users.id == userid).first()
-    return templates.TemplateResponse('homeUser.html', {'request': request, 'user': user})
+@router.get("/user/", response_class=HTMLResponse, name='Main page after login')
+def users(request: Request, db: Session = Depends(get_db)):
+    # user = db.query(models.Users).filter(models.Users.id == userid).first()
+    return templates.TemplateResponse('homeUser.html', {'request': request})
 
 
-@router.get('/savedresults/user/{id}', response_class=HTMLResponse, name='All saved result of user')
-def home(request: Request):
-    return templates.TemplateResponse('savedResults.html', {'request': request})
-
-
-#
-# @router.get('/user', name='user:get')
-# def get_user(token: AuthToken = Depends(check_auth_token), database=Depends(connect_db)):
-#     user = database.query(User).filter(User.id == token.user_id).one_or_none()
-#     return {'user': user.get_filtered_data()}
-@app.get("/private/", response_class=HTMLResponse)
-async def private(request: Request, email=Depends(auth_wrapper)):
+@router.get('/savedresults/user', response_class=HTMLResponse, name='All saved result of user')
+def home(request: Request, db: Session = Depends(get_db)):
+    password = request.cookies.get('Authorization')
+    user = db.query(models.Users).filter(models.Users.password == password).one_or_none()
+    print(user)
     try:
-        return templates.TemplateResponse("private.html",
-                                          {"request": request})
+        return templates.TemplateResponse('savedResults.html', {'request': request})
     except:
         raise RequiresLoginException()
+
+
+@router.get('/logout', response_class=HTMLResponse, name='Logout')
+def home(request: Request):
+    request.session.clear()
+    return templates.TemplateResponse('index.html', {'request': request})
+
+# #
+# # @router.get('/user', name='user:get')
+# # def get_user(token: AuthToken = Depends(check_auth_token), database=Depends(connect_db)):
+# #     user = database.query(User).filter(User.id == token.user_id).one_or_none()
+# #     return {'user': user.get_filtered_data()}
+
